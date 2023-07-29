@@ -1,9 +1,14 @@
 "use client";
 
 import Input from "@/components/input";
-import { use, useCallback, useState } from "react";
+import Image from "next/image";
+import axios from "axios";
+import { useCallback, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Auth = () => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -14,11 +19,42 @@ const Auth = () => {
         setVariant((currentVariant) => currentVariant === 'login' ? 'register' : 'login');
     }, [])
 
+    const login = useCallback(async () => {
+        try {
+            await signIn(
+                'credentials', {
+                    email,
+                    password,
+                    redirect: false,
+                    callbackUrl: '/'
+                }
+            );
+
+            router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }, [email, password, router])
+
+    const register = useCallback(async () => {
+        try{
+            await axios.post('/api/register', {
+                email,
+                name,
+                password
+            });
+
+            login();
+        } catch (error) {
+                console.log(error);
+        }
+    }, [email, name, password, login]);
+
     return (
         <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
             <div className="w-full h-full bg-black lg:bg-opacity-50">
                 <nav className="px-12 py-5">
-                    <img src="/images/logo.png" alt="Logo" className="h-12"/>
+                    <Image src="/images/logo.png" alt="Logo" className="h-12" width={200} height={60}/>
                 </nav>
                 <div className="flex justify-center">
                     <div className="self-center w-full px-16 py-16 mt-2 bg-black rounded-md bg-opacity-70 lg:w-2/5 lg:max-w-md">
@@ -50,7 +86,7 @@ const Auth = () => {
                                 value={password}
                             />
                         </div>
-                        <button className="w-full py-3 mt-10 text-white transition bg-red-600 rounded-md hover:bg-red-700">
+                        <button onClick={variant === 'login' ? login : register} className="w-full py-3 mt-10 text-white transition bg-red-600 rounded-md hover:bg-red-700">
                             {variant === 'login' ? 'Se connecter' : 'S\'inscrire'}
                         </button>
                         <p className="mt-12 text-neutral-500">
