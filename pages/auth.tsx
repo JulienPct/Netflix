@@ -1,16 +1,12 @@
-"use client";
-
 import Input from "@/components/input";
 import Image from "next/image";
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 
 const Auth = () => {
-    const router = useRouter();
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
@@ -27,16 +23,13 @@ const Auth = () => {
                 'credentials', {
                     email,
                     password,
-                    redirect: false,
-                    callbackUrl: '/'
+                    callbackUrl: '/profiles'
                 }
             );
-
-            router.push('/');
         } catch (error) {
             console.log(error);
         }
-    }, [email, password, router])
+    }, [email, password])
 
     const register = useCallback(async () => {
         try{
@@ -94,13 +87,13 @@ const Auth = () => {
                         <div className="flex flex-row items-center justify-center gap-4 mt-8">
                             <div 
                                 className="flex items-center justify-center w-10 h-10 transition bg-white rounded-full cursor-pointer hover:opacity-80"
-                                onClick={() => signIn('google', { callbackUrl: '/' })}
+                                onClick={() => signIn('google', { callbackUrl: '/profiles' })}
                             >
                                 <FcGoogle size={30}/>
                             </div>
                             <div 
                                 className="flex items-center justify-center w-10 h-10 transition bg-white rounded-full cursor-pointer hover:opacity-80"
-                                onClick={() => signIn('github', { callbackUrl: '/' })}
+                                onClick={() => signIn('github', { callbackUrl: '/profiles' })}
                             >
                                 <FaGithub size={30}/>
                             </div>
