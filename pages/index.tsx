@@ -1,5 +1,3 @@
-"use client";
-
 import { getSession, signOut } from 'next-auth/react'
 import { NextPageContext } from 'next'
 
@@ -9,10 +7,14 @@ export async function getServerSideProps(context: NextPageContext) {
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/auth',
         permanent: false,
       },
     }
+  }
+
+  return {
+    props: {}
   }
 }
 
