@@ -22,9 +22,9 @@ const Navbar = () => {
             }
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
 
-        return window.removeEventListener('scroll', handleScroll);
+        return window.removeEventListener("scroll", handleScroll);
     }, []);
     
     const toggleMobileMenu = useCallback(() => setShowMobileMenu((prev) => !prev), []);
